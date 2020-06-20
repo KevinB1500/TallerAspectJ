@@ -28,6 +28,24 @@ public aspect Logger {
 	
 	}
 	
+	pointcut retiro() : call(* *.moneyWithdrawal*());
+    after() : retiro() {
+    	Calendar cal = Calendar.getInstance();
+    	System.out.println("Retiro realizado el :"+cal.getTime());
+    	writeWithdrawalLog();
+    }
+	private void writeWithdrawalLog() {
+		try{
+			Calendar cal = Calendar.getInstance();
+			FileWriter fw = new FileWriter(file.getAbsoluteFile());
+	        BufferedWriter bw = new BufferedWriter(fw);
+	        bw.write("Retiro realizado el: "+cal.getTime());	
+	        bw.close();
+		}catch (IOException e) {
+			e.printStackTrace();
+		}	
+	}
+	
 	pointcut usuario() : call(* *.create*(..));
     after() : usuario() {
     //Aspecto ejemplo: solo muestra este mensaje después de haber creado un usuario 
